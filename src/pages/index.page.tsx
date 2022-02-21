@@ -1,17 +1,33 @@
-
+import { For } from 'solid-js';
+import { setStore, store } from '~/store';
+import { useSimpleForm } from '~/UseForm';
+import { produce } from 'solid-js/store';
+import { nanoid } from 'nanoid';
 
 export const Page = () => {
+  const { register, handleSubmit } = useSimpleForm({ defaultValue: '', clearOnSubmit: true });
+
+  const submit = handleSubmit((name) => {
+    setStore(produce(store => {
+      store.points.push({
+        id: nanoid(6),
+        name,
+        count: 1,
+      });
+    }))
+  })
+
   return (
-    <div class='flex items-center justify-center h-screen text-4xl gap-2'>
-      <span>Hello</span>
-      <span class='text-[#466FA4]'>Solid-js</span>
-      <span>with</span>
-      <span class='text-[#48B0F1]'>WindiCSS</span>
-      <span>and</span>
-      <span class='text-[#2F74C0]'>TypeScript</span>
-      <span>on</span>
-      <span class='text-[#A247F2]'>Vite SSR</span>
-      <span>!</span>
+    <div class='flex flex-col items-center justify-center h-screen'>
+      <form onSubmit={submit} class="border-2 rounded">
+        <input class="px-2 py-1" {...register()} />
+        <button class="border-l-2 px-2">add</button>
+      </form>
+      <ul class="list-decimal">
+        <For each={store.points}>{
+          (point) => <li>{point.name}</li>
+        }</For>
+      </ul>
     </div>
   );
 };
