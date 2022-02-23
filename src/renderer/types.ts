@@ -1,5 +1,5 @@
-import { Component } from 'solid-js'
-import type { PageContextBuiltIn } from 'vite-plugin-ssr'
+import { Component } from 'solid-js';
+import type { PageContextBuiltIn } from 'vite-plugin-ssr';
 export type PageProps = {}
 export type PageContext = PageContextBuiltIn & {
   Page: (pageProps: PageProps) => Component
@@ -9,3 +9,5 @@ export type PageContext = PageContextBuiltIn & {
     description?: string
   }
 }
+
+declare module '*.css';

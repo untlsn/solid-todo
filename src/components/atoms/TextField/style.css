@@ -1,0 +1,3 @@
+.input-placeholder-move:focus + *, .input-placeholder-move:not(:placeholder-shown) + * {
+  @apply transform -translate-y-[86%] scale-90;
+}

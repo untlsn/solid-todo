@@ -23,3 +23,21 @@ And prerender with
 ```
 npm run prerender
 ```
+
+# Side palette
+<style>
+  .box {
+    --color: white;
+    display: inline-block;
+    height: 1rem; 
+    width: 1rem;
+    background-color: var(--color);
+  }
+</style>
+
+* <div class="box" style="--color: #390099"></div> blue
+* <div class="box" style="--color: #9E0059"></div> purple 
+* <div class="box" style="--color: #FF0054"></div> fuchsia (main)
+* <div class="box" style="--color: #FF5400"></div> orange 
+* <div class="box" style="--color: #FFBD00"></div> yellow 
+

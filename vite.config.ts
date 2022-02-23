@@ -1,7 +1,7 @@
-import solidPlugin from 'vite-plugin-solid'
-import ssr from 'vite-plugin-ssr/plugin'
+import solidPlugin from 'vite-plugin-solid';
+import ssr from 'vite-plugin-ssr/plugin';
 import WindiCSS from 'vite-plugin-windicss';
-import { UserConfig } from 'vite'
+import { UserConfig } from 'vite';
 import { resolve } from 'path';
 
 export default {
@@ -12,10 +12,11 @@ export default {
   ],
   resolve: {
     alias: {
-      "~": resolve('./src')
+      '~': resolve('./src'),
+      '~icons': resolve('./src/components/icons/_'),
     },
   },
   build: {
     polyfillDynamicImport: false,
   },
-} as UserConfig
+} as UserConfig;

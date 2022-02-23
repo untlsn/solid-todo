@@ -1,0 +1,5 @@
+svg { display: inline-block }
+
+.min-h-page { min-height: calc(100vh - 4rem) }
+
+.before::before { content: "" }

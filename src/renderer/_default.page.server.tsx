@@ -1,27 +1,27 @@
-import { generateHydrationScript, renderToString } from 'solid-js/web'
-import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr'
-import { PageContext } from './types'
-import logoUrl from './logo.svg'
+import { generateHydrationScript, renderToString } from 'solid-js/web';
+import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr';
+import { PageContext } from './types';
+import logoUrl from './logo.svg';
 import 'virtual:windi.css';
+import PageWrapper from '~/providers/PageWrapper';
 
 
-export { render }
-export { passToClient }
+export { render };
+export { passToClient };
 
 // See https://vite-plugin-ssr.com/data-fetching
-const passToClient = ['pageProps', 'documentProps']
+const passToClient = ['pageProps', 'documentProps'];
 
 function render(pageContext: PageContext) {
-  const { Page, pageProps } = pageContext
 
   const pageHtml = renderToString(() => (
-    <Page {...pageProps} />
-  ))
+    <PageWrapper {...pageContext} />
+  ));
 
   // See https://vite-plugin-ssr.com/head
-  const { documentProps } = pageContext
-  const title = (documentProps && documentProps.title) || 'Vite SSR app'
-  const description = (documentProps && documentProps.description) || 'App using Vite + vite-plugin-ssr'
+  const { documentProps } = pageContext;
+  const title = (documentProps && documentProps.title) || 'Vite SSR app';
+  const description = (documentProps && documentProps.description) || 'App using Vite + vite-plugin-ssr';
 
   return escapeInject`<!DOCTYPE html>
     <html lang="en">
@@ -36,5 +36,5 @@ function render(pageContext: PageContext) {
       <body>
         <div id="page-view">${dangerouslySkipEscape(pageHtml)}</div>
       </body>
-    </html>`
+    </html>`;
 }

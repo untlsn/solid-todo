@@ -17,19 +17,19 @@ export const useForm = <Fields>(props: Partial<FormProps<Fields>> = {}) => {
   const self = {
     register: (name: string, refOverload?: (ref: HTMLInputElement) => void) => {
       const spitedName = name.split('.');
-      const value = () => spitedName.reduce((acc: any, cur) => acc[cur], store)
+      const value = () => spitedName.reduce((acc: any, cur) => acc[cur], store);
 
       return {
         onInput: (ev) => (
           self.setValue(name as any, ev.currentTarget.value as any)
         ),
-        value: value(),
+        value: value() ?? '',
         name,
         ref(ref) {
           scopeRefArr[name] = ref;
           refOverload?.(ref);
-        }
-      }
+        },
+      };
     },
     setValue: (name: string, value: any) => (setStore as any)(...name.split('.'), value),
     clear() {
@@ -42,8 +42,8 @@ export const useForm = <Fields>(props: Partial<FormProps<Fields>> = {}) => {
       ev.preventDefault();
       callback(store as any, ev);
       if (props.clearOnSubmit) self.clear();
-    }
+    },
   } as UseFormResult<Fields>;
 
   return self;
-}
+};
