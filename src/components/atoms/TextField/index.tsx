@@ -6,7 +6,7 @@ export interface TextFieldProps {
   placeholder?: string;
   error?: string;
 
-  inputSpread?: JSX.InputHTMLAttributes<HTMLInputElement>
+  spread?: JSX.InputHTMLAttributes<HTMLInputElement>
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -17,7 +17,7 @@ const TextField = (props: TextFieldProps) => {
         tabIndex={-1}
       >
         <input
-          {...props.inputSpread || {}}
+          {...props.spread || {}}
           placeholder=" "
           class="w-full rounded h-10 bg-transparent focus:outline-none input-placeholder-move"
         />
