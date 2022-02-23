@@ -3,8 +3,13 @@ import { JSX } from 'solid-js';
 import { FieldPath, FieldPathValue, Path, UnpackNestedValue, UseFormSetValue } from './ObjectPath';
 import { FormProps } from '~/UseForm/types';
 
+interface RegisterProps {
+  refOverload?: (ref: HTMLInputElement) => void
+  valueAsNumber?: boolean
+}
+
 interface UseFormResult<Fields> {
-  register(name: Path<Fields>): JSX.InputHTMLAttributes<HTMLInputElement>
+  register(name: Path<Fields>, registerProps?: RegisterProps): JSX.InputHTMLAttributes<HTMLInputElement>
   unregister(name: Path<Fields>): void
   handleSubmit(callback: (values: Fields, ev: Event) => void): (ev: Event) => void
   clear(name: Path<Fields>): void
@@ -20,21 +25,23 @@ export const useForm = <Fields>(props: Partial<FormProps<Fields>> = {}) => {
   const registeredEvent: Record<string, any> = {};
 
   const self = {
-    register(name: string, refOverload?: (ref: HTMLInputElement) => void) {
+    register(name: string, registerProps: RegisterProps = {}) {
       const spitedName = name.split('.');
       const value = () => spitedName.reduce((acc: any, cur) => acc[cur], store);
 
       return {
         value: value() ?? '',
         name,
-        ref(ref) {
+        type: registerProps.valueAsNumber ? 'number' : undefined,
+        ref(ref: any) {
           ref.removeEventListener('input', registeredEvent[name]);
-          registeredEvent[name] = (ev: any) => (
-            self.setValue(name as any, ev.currentTarget.value as any)
-          );
+          registeredEvent[name] = (ev: any) => {
+            const parser = registerProps.valueAsNumber ? Number : String;
+            self.setValue(name as any, parser(ev.currentTarget.value) as any);
+          };
           ref.addEventListener('input', registeredEvent[name]);
           scopeRefArr[name] = ref;
-          refOverload?.(ref);
+          registerProps.refOverload?.(ref);
         },
       };
     },
@@ -43,7 +50,7 @@ export const useForm = <Fields>(props: Partial<FormProps<Fields>> = {}) => {
     },
     setValue(name: string, value: any) {
       (setStore as any)(...name.split('.'), value);
-      if (scopeRefArr[name]) scopeRefArr[name].value = value;
+      if (scopeRefArr[name]) scopeRefArr[name].value = value ?? '';
     },
     clear(name: string) {
       const defVal = props.defaultValues ? name.split('.').reduce(

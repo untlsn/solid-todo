@@ -2,23 +2,30 @@ import { useForm } from '~/UseForm';
 import TextField from '~/components/atoms/TextField';
 import { createEffect } from 'solid-js';
 import Switch from '~/components/atoms/Switch';
+import { setStore, store } from '~/store';
+import { ToDoPoint } from '~/store/types';
+import { nanoid } from 'nanoid';
 
 interface AddPointFormFields {
   name: string
   countable: boolean
-  count?: number
+  maxCount?: number
 }
 
 const AddPage = () => {
-  const { register, handleSubmit, watch, clear, setValue } = useForm<AddPointFormFields>();
+  const { register, handleSubmit, watch, clear, setValue } = useForm<AddPointFormFields>({ clearOnSubmit: true });
 
   const submit = handleSubmit((values) => {
-    console.log({ ...values });
+    setStore('points', store.points.length, {
+      id: nanoid(),
+      name: values.name,
+      maxCount: values.countable ? values.maxCount : 1,
+      curCount: 0,
+    } as ToDoPoint);
   });
 
   createEffect(() => {
-    console.log(watch('countable'));
-    if (!watch('countable')) clear('count');
+    if (!watch('countable')) clear('maxCount');
   });
 
   return (
@@ -35,7 +42,7 @@ const AddPage = () => {
           <TextField
             placeholder="Count"
             spread={{
-              ...register('count'),
+              ...register('maxCount', { valueAsNumber: true }),
               disabled: !watch('countable'),
             }}
           />

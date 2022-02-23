@@ -3,3 +3,9 @@ svg { display: inline-block }
 .min-h-page { min-height: calc(100vh - 4rem) }
 
 .before::before { content: "" }
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] { -moz-appearance: textfield }
