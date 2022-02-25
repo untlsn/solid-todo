@@ -5,7 +5,7 @@ interface IconWrapperProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
 }
 
 const IconWrapper = (_props: IconWrapperProps) => {
-  const [props, forSvg] = splitProps(_props, ['viewBoxArr']);
+  const [props, forSvg] = splitProps(_props, ['viewBoxArr', 'children']);
 
   return (
     <svg
@@ -17,7 +17,9 @@ const IconWrapper = (_props: IconWrapperProps) => {
       width="1em"
       xmlns="http://www.w3.org/2000/svg"
       {...forSvg}
-    />
+    >
+      {props.children}
+    </svg>
   );
 };
 

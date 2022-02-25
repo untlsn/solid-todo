@@ -1,22 +1,8 @@
-import { createStore } from 'solid-js/store';
-import { JSX } from 'solid-js';
-import { FieldPath, FieldPathValue, Path, UnpackNestedValue, UseFormSetValue } from './ObjectPath';
-import { FormProps } from '~/UseForm/types';
+import { createStore, unwrap } from 'solid-js/store';
+import { Path } from './ObjectPath';
+import { FormProps, RegisterProps, UseFormResult } from '~/UseForm/types';
 
-interface RegisterProps {
-  refOverload?: (ref: HTMLInputElement) => void
-  valueAsNumber?: boolean
-}
 
-interface UseFormResult<Fields> {
-  register(name: Path<Fields>, registerProps?: RegisterProps): JSX.InputHTMLAttributes<HTMLInputElement>
-  unregister(name: Path<Fields>): void
-  handleSubmit(callback: (values: Fields, ev: Event) => void): (ev: Event) => void
-  clear(name: Path<Fields>): void
-  clearForm(): void
-  setValue: UseFormSetValue<Fields>;
-  watch<TFieldName extends FieldPath<Fields> = FieldPath<Fields>>(name: Path<Fields>): UnpackNestedValue<FieldPathValue<Fields, TFieldName>>
-}
 
 export const useForm = <Fields>(props: Partial<FormProps<Fields>> = {}) => {
   const [store, setStore] = createStore<Fields>(props.defaultValues || {} as any);
@@ -64,7 +50,7 @@ export const useForm = <Fields>(props: Partial<FormProps<Fields>> = {}) => {
     clearForm: () => Object.keys(scopeRefArr).forEach(self.clear as any),
     handleSubmit: (callback: (values: Fields, ev: Event) => void) => (ev: Event) => {
       ev.preventDefault();
-      callback(store as any, ev);
+      callback(unwrap(store) as any, ev);
       if (props.clearOnSubmit) self.clearForm();
     },
     watch(name: Path<Fields>) {

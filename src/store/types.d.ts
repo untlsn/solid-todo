@@ -3,4 +3,5 @@ export interface ToDoPoint {
   name: string,
   maxCount: number,
   curCount: number,
+  color: string,
 }
