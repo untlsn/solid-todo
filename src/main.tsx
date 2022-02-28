@@ -6,14 +6,15 @@ import { Router, useRoutes } from 'solid-app-router';
 import 'virtual:windi.css';
 import 'virtual:windi-devtools';
 import '~/assets/style/global.css';
+import { DragDropProvider, DragDropSensors } from '@thisbeyond/solid-dnd';
 
-const pages = Object.entries(import.meta.glob('./pages/**/*')).map(([key, it]) => {
-  return {
-    path: key.replace(/(\.\/pages)|(index)|(\.[tj]sx?)/g, ''),
-    component: lazy(it as any),
-  };
-});
-
+const pages = Object.entries(import.meta.glob('./pages/**/*') as Record<string, () => Promise<any>>)
+  .map(([path, component]) => ({
+    path: path
+      .replace(/(\.\/pages)|(\.[tj]sx?)|(\/index)|]/g, '')
+      .replace(/\[/g, ':'),
+    component: lazy(component),
+  }));
 
 const Main = () => {
   const Routes = useRoutes(pages);
@@ -23,10 +24,14 @@ const Main = () => {
   });
 
   return (
-    <div class="min-h-screen">
-      <Header />
-      <Routes />
-    </div>
+    <DragDropProvider>
+      <DragDropSensors>
+        <div class="min-h-screen">
+          <Header />
+          <Routes />
+        </div>
+      </DragDropSensors>
+    </DragDropProvider>
   );
 };
 

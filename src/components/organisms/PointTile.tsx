@@ -5,18 +5,22 @@ import CheckCircle from '~/components/atoms/CheckCircle';
 import SquareCount from '~/components/atoms/SquareCount';
 import Button from '~/components/atoms/Button';
 import { ToDoPoint } from '~/store/types';
+import { createSortable } from '@thisbeyond/solid-dnd';
 
 interface PointTileProps extends ToDoPoint {
 }
 
 const PointTile = (props: PointTileProps) => {
+  const sortable = createSortable(props.id);
   const changeCount = (num: number) => setStore('points', props.id, 'curCount', cAdd(num));
   const isMulti = () => props.maxCount != 1;
 
-  console.log(isMulti());
-
   return (
-    <article class="bg-white border-l-4 h-20 w-100 p-4 rounded" style={{ 'border-color': props.color }}>
+    <article
+      ref={sortable}
+      class={`bg-white border-l-4 h-20 w-100 p-4 rounded sortable ${sortable.isActiveDraggable ? 'opacity-25' : ''}`}
+      style={{ 'border-color': props.color }}
+    >
       <div class="flex items-center gap-2">
         <Show
           when={isMulti()}
